@@ -1,0 +1,1 @@
+package io.github.flowercup.ingestor.service

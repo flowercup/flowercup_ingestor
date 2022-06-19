@@ -5,10 +5,13 @@ type Query {
     exchangeDataCandlestick(from: Long, to: Long, exchange: ExchangeEnum, coin: String): [ExchangeDataCandlestick]
     exchangePriceDelta(exchange: ExchangeEnum, coin: String, from: Long, to: Long, lastMs: Long): ExchangeDataDelta
     exchangePriceIncrease(exchange: ExchangeEnum, coin: String, from: Long, to: Long, lastMs: Long): ExchangeDataIncrease
+    tweetData(coin: String, textLike: String, lastMs: Long): [TweetData]
+    redditData(textLike: String, lastMs: Long): [RedditData]
 }
 
 type Subscription {
     exchangeData(exchange: ExchangeEnum, coin: String): ExchangeData
+    priceDeltaTracker(exchange: ExchangeEnum, coin: String, delta: Long, changeType: ChangeType, lastMs: Long): PriceDeltaTrigger
 }
 
 input ExchangeDataOrderByInput {
@@ -102,6 +105,26 @@ type ExchangeDataIncrease {
     changeType: ChangeType,
     firstPrice: Long,
     lastPrice: Long
+}
+
+type TweetData {
+    timestamp: String
+    coin: String
+    text: String
+    sentiment: Float
+}
+
+type RedditData {
+    timestamp: Long,
+    text: String
+    sentiment: Float
+}
+
+type PriceDeltaTrigger {
+    coin: String
+    exchange: ExchangeEnum
+    timestamp: Long,
+    delta: Long
 }
 
 enum ExchangeEnum {
