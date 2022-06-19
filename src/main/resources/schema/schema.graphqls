@@ -1,0 +1,115 @@
+scalar Long
+
+type Query {
+    exchangeData(first: Int, after: String, orderBy: ExchangeDataOrderByInput, filter: ExchangeDataFilterInput): ExchangeDataConnection
+    exchangeDataCandlestick(from: Long, to: Long, exchange: ExchangeEnum, coin: String): [ExchangeDataCandlestick]
+    exchangePriceDelta(exchange: ExchangeEnum, coin: String, from: Long, to: Long, lastMs: Long): ExchangeDataDelta
+    exchangePriceIncrease(exchange: ExchangeEnum, coin: String, from: Long, to: Long, lastMs: Long): ExchangeDataIncrease
+}
+
+type Subscription {
+    exchangeData(exchange: ExchangeEnum, coin: String): ExchangeData
+}
+
+input ExchangeDataOrderByInput {
+    timestamp: Sort
+}
+
+input ExchangeDataFilterInput {
+    exchange: ExchangeEnum,
+    timestamp: TimestampFilterOption,
+    coin: StringFilterOption
+    value: LongFilterOption
+}
+
+enum Sort {
+    asc
+    desc
+}
+
+input StringFilterOption {
+    value: String!
+    option: FilterOption
+}
+
+input TimestampFilterOption {
+    valueFrom: Long!
+    valueTo: Long
+}
+
+input IntFilterOption {
+    value: Int!
+    option: NumericFilterOption
+}
+
+input LongFilterOption {
+    value: Long!
+    option: NumericFilterOption
+}
+
+enum FilterOption {
+    greaterThan
+    lessThan
+    equal
+    like
+}
+
+enum NumericFilterOption {
+    greaterThan,
+    lessThan,
+    equal
+}
+
+type ExchangeDataConnection {
+    edges: [ExchangeDataEdge]
+}
+
+type ExchangeDataEdge {
+    node: ExchangeData
+    cursor: String
+}
+
+type ExchangeData {
+    exchange: String
+    value: Int
+    coin: String
+    timestamp: Int
+    volume: Float
+}
+
+type ExchangeDataCandlestick {
+    timestamp: Long
+    exchange: String
+    coin: String
+    open: Long
+    high: Long
+    low: Long
+    close: Long
+}
+
+type ExchangeDataDelta {
+    from: Long,
+    to: Long,
+    delta: Long,
+    firstPrice: Long,
+    lastPrice: Long
+}
+
+type ExchangeDataIncrease {
+    from: Long,
+    to: Long,
+    change: Float,
+    changeType: ChangeType,
+    firstPrice: Long,
+    lastPrice: Long
+}
+
+enum ExchangeEnum {
+    Coinbase,
+    Binance
+}
+
+enum ChangeType {
+    Increase,
+    Decrease
+}

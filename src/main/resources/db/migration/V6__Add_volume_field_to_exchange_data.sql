@@ -1,0 +1,1 @@
+alter table exchange_data add column volume bigint not null default 0;
